@@ -1,0 +1,2 @@
+# USTC_SSE_Message_Subscribe
+中科大软件学院信息化平台通知订阅
