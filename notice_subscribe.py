@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 import datetime
 import smtplib
 from email.mime.text import MIMEText
+import time
 
 USTC_SSE_URL = "http://mis.sse.ustc.edu.cn/default.aspx"
 HEADER = {
@@ -82,10 +83,20 @@ def send_notice(notice_list):
     month = datetime.datetime.now().month
     day   = datetime.datetime.now().day
     cur_date = "" + str(year) + "-" + str(month) + "-" + str(day)
+    # 每个月1号提醒写月报
+    if day == 1 and IS_INTERNSHIP:
+        remind_dict = {
+            "title": "同学， 今天已经1号了，实习月报交了吗！",
+            "author": "Jason",
+            "content": "<font color=\"#FF0000\">今天已经1号了，实习月报交了吗！</font><br />"*10
+        }
+        send_email(remind_dict)
+    # 发布最新通知
     for notice in notice_list:
         if notice["time"] == cur_date:
             notice["content"] = get_notice_content(notice["link"])
             send_email(notice)
+        
 
 
 def get_notice_content(_notice_url):
@@ -107,12 +118,14 @@ def send_email(_notice):
     pwd = SMTP_PWD
     body = _notice["content"]
     msg = MIMEText(body, 'html')
-    msg['subject'] = "【" + _notice["title"] + "】" + "-" + _notice["author"]
+    msg['subject'] = _notice["title"] + "——" + _notice["author"]
     msg["from"] = sender
-    msg["to"] = ';'.join(RECEIVER)
+    receiver = RECEIVER
+    msg["Bcc"] = ','.join(receiver)
     s = smtplib.SMTP(host, port)
     s.login(sender, pwd)
-    s.sendmail(sender, RECEIVER, msg.as_string())
+    s.sendmail(sender, receiver, msg.as_string())
+    print(_notice["title"])
     print("*****************邮件发送成功*******************")
     
 

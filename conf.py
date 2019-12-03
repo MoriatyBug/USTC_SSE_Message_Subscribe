@@ -7,6 +7,9 @@ RECEIVER = ['**@**']
 USER_ID  = "SA****"
 USER_PWD = "***"
 
+# 是否在实习，用于提醒写实习月报，后期建立receiver的字典保存，目前没有必要
+IS_INTERNSHIP = True
+
 # SMTP服务器信息设置（发件邮箱）
 # 我用的是163邮箱
 # 可以参考：https://blog.csdn.net/qlzy_5418/article/details/86661883
